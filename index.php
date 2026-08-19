@@ -1,5 +1,5 @@
 <?php
-// index.php - Landing Page (Pure HTML + CSS)
+// index.php - Landing Page 
 require_once 'config/database.php';
 
 // If already logged in, redirect based on role
@@ -24,7 +24,7 @@ include 'includes/header.php';
         <hr>
         <div class="landing-buttons">
             <a href="login.php" class="btn btn-dark">Login</a>
-            <a href="register.php" class="btn btn-blue">Register</a>
+            <a href="register.php" class="btn btn-dark">Register</a>
         </div>
     </div>
 </div>

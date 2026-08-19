@@ -1,5 +1,5 @@
 <?php
-// login.php - Login Page (Pure HTML + CSS)
+// login.php - Login Page 
 require_once 'config/database.php';
 
 $error = '';
