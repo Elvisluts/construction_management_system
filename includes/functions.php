@@ -230,43 +230,46 @@ function get_projects_by_manager($pdo, $manager_id) {
 }
 
 /**
- * Get recent projects (for dashboard)
+ * Get recent projects (for dashboard) - FIXED
  */
 function get_recent_projects($pdo, $limit = 5) {
+    $limit = intval($limit);
     $stmt = $pdo->prepare("SELECT p.*, u.fullname as manager_name 
                            FROM projects p 
                            LEFT JOIN users u ON p.created_by = u.id 
                            ORDER BY p.created_at DESC 
-                           LIMIT ?");
-    $stmt->execute([$limit]);
+                           LIMIT " . $limit);
+    $stmt->execute();
     return $stmt->fetchAll();
 }
 
 /**
- * Get recent tasks (for dashboard)
+ * Get recent tasks (for dashboard) - FIXED
  */
 function get_recent_tasks($pdo, $limit = 5) {
+    $limit = intval($limit);
     $stmt = $pdo->prepare("SELECT t.*, p.name as project_name, u.fullname as assigned_name 
                            FROM tasks t 
                            LEFT JOIN projects p ON t.project_id = p.id 
                            LEFT JOIN users u ON t.assigned_to = u.id 
                            ORDER BY t.created_at DESC 
-                           LIMIT ?");
-    $stmt->execute([$limit]);
+                           LIMIT " . $limit);
+    $stmt->execute();
     return $stmt->fetchAll();
 }
 
 /**
- * Get recent expenses (for dashboard)
+ * Get recent expenses (for dashboard) - FIXED
  */
 function get_recent_expenses($pdo, $limit = 5) {
+    $limit = intval($limit);
     $stmt = $pdo->prepare("SELECT e.*, p.name as project_name, u.fullname as recorded_name 
                            FROM expenses e 
                            LEFT JOIN projects p ON e.project_id = p.id 
                            LEFT JOIN users u ON e.recorded_by = u.id 
                            ORDER BY e.created_at DESC 
-                           LIMIT ?");
-    $stmt->execute([$limit]);
+                           LIMIT " . $limit);
+    $stmt->execute();
     return $stmt->fetchAll();
 }
 

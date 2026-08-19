@@ -1,7 +1,6 @@
 <?php
-// manager/dashboard.php - Manager Dashboard
+// manager/dashboard.php - Manager Dashboard with Clickable Cards
 
-// Enable error reporting (temporary)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -9,11 +8,9 @@ require_once '../config/database.php';
 require_once '../includes/auth.php';
 require_once '../includes/functions.php';
 
-// Require login and manager role
 require_login();
 require_role('manager');
 
-// Get user info
 $user = get_logged_in_user($pdo);
 $fullname = $user['fullname'] ?? 'Manager';
 $user_id = $user['id'] ?? 0;
@@ -21,29 +18,35 @@ $user_id = $user['id'] ?? 0;
 include '../includes/header.php';
 ?>
 
-<div style="margin-bottom: 30px;">
-    <h2>Manager Dashboard</h2>
-    <p>Welcome, <?php echo htmlspecialchars($fullname); ?>!</p>
-</div>
+<h2>Manager Dashboard</h2>
+<p>Welcome, <strong><?php echo htmlspecialchars($fullname); ?></strong>!</p>
 
-<!-- Statistics Cards -->
+<!-- Clickable Cards -->
 <div class="card-grid">
-    <div class="card primary">
-        <h3>My Projects</h3>
-        <div class="number"><?php echo count(get_projects_by_manager($pdo, $user_id)); ?></div>
-    </div>
-    <div class="card success">
-        <h3>Ongoing Projects</h3>
-        <div class="number"><?php echo get_ongoing_projects($pdo); ?></div>
-    </div>
-    <div class="card warning">
-        <h3>Pending Tasks</h3>
-        <div class="number"><?php echo get_pending_tasks($pdo); ?></div>
-    </div>
-    <div class="card info">
-        <h3>Total Workers</h3>
-        <div class="number"><?php echo get_total_workers($pdo); ?></div>
-    </div>
+    <a href="projects.php" style="text-decoration: none; color: inherit; display: block;">
+        <div class="card primary">
+            <h3>My Projects</h3>
+            <div class="number"><?php echo count(get_projects_by_manager($pdo, $user_id)); ?></div>
+        </div>
+    </a>
+    <a href="projects.php" style="text-decoration: none; color: inherit; display: block;">
+        <div class="card success">
+            <h3>Ongoing Projects</h3>
+            <div class="number"><?php echo get_ongoing_projects($pdo); ?></div>
+        </div>
+    </a>
+    <a href="tasks.php" style="text-decoration: none; color: inherit; display: block;">
+        <div class="card warning">
+            <h3>Pending Tasks</h3>
+            <div class="number"><?php echo get_pending_tasks($pdo); ?></div>
+        </div>
+    </a>
+    <a href="workers.php" style="text-decoration: none; color: inherit; display: block;">
+        <div class="card info">
+            <h3>Total Workers</h3>
+            <div class="number"><?php echo get_total_workers($pdo); ?></div>
+        </div>
+    </a>
 </div>
 
 <!-- Low Stock Alert -->
@@ -53,11 +56,7 @@ include '../includes/header.php';
         <strong>⚠️ Low Stock Alert</strong>
         <ul>
             <?php foreach ($low_stock as $material): ?>
-                <li>
-                    <?php echo htmlspecialchars($material['name']); ?> - 
-                    Stock: <?php echo $material['quantity']; ?> <?php echo $material['unit']; ?> 
-                    (Reorder Level: <?php echo $material['reorder_level']; ?>)
-                </li>
+                <li><?php echo htmlspecialchars($material['name']); ?> - Stock: <?php echo $material['quantity']; ?> <?php echo $material['unit']; ?></li>
             <?php endforeach; ?>
         </ul>
     </div>

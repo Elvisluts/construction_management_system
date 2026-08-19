@@ -1,5 +1,5 @@
 <?php
-// includes/header.php - Complete Fixed Version
+// includes/header.php - Complete Header with Navigation
 
 // Detect current directory
 $current_dir = basename(dirname($_SERVER['PHP_SELF']));
