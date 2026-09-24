@@ -61,10 +61,10 @@ include '../includes/header.php';
     <div class="form-box">
         <form method="POST" action="">
             <label for="name">Project Name *</label>
-            <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($name ?? ''); ?>" required>
+            <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($name ?? ''); ?>" placeholder="e.g., Riverside Apartments" required>
 
             <label for="description">Description</label>
-            <textarea id="description" name="description" rows="4"><?php echo htmlspecialchars($description ?? ''); ?></textarea>
+            <textarea id="description" name="description" rows="4" placeholder="Briefly describe the project (optional)"><?php echo htmlspecialchars($description ?? ''); ?></textarea>
 
             <label for="start_date">Start Date *</label>
             <input type="date" id="start_date" name="start_date" value="<?php echo $start_date ?? ''; ?>" required>
@@ -73,7 +73,7 @@ include '../includes/header.php';
             <input type="date" id="end_date" name="end_date" value="<?php echo $end_date ?? ''; ?>" required>
 
             <label for="budget">Budget (KES) *</label>
-            <input type="number" id="budget" name="budget" step="0.01" value="<?php echo $budget ?? ''; ?>" required>
+            <input type="number" id="budget" name="budget" step="0.01" value="<?php echo $budget ?? ''; ?>" placeholder="e.g., 2500000" required>
 
             <button type="submit">Create Project</button>
         </form>

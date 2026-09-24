@@ -1,6 +1,4 @@
 <?php
-// includes/functions.php - Complete Reusable Functions
-
 /**
  * Sanitize input data
  */
@@ -224,13 +222,53 @@ function get_low_stock_count($pdo) {
  * Get projects by manager
  */
 function get_projects_by_manager($pdo, $manager_id) {
+    if (($_SESSION['role'] ?? '') === 'admin') {
+        $stmt = $pdo->query("SELECT p.*, u.fullname as manager_name FROM projects p LEFT JOIN users u ON p.created_by = u.id ORDER BY p.created_at DESC");
+        return $stmt->fetchAll();
+    }
     $stmt = $pdo->prepare("SELECT * FROM projects WHERE created_by = ? ORDER BY created_at DESC");
     $stmt->execute([$manager_id]);
     return $stmt->fetchAll();
 }
 
+function get_accessible_project($pdo, $project_id, $user_id) {
+    if (($_SESSION['role'] ?? '') === 'admin') {
+        $stmt = $pdo->prepare("SELECT p.*, u.fullname as manager_name FROM projects p LEFT JOIN users u ON p.created_by = u.id WHERE p.id = ?");
+        $stmt->execute([$project_id]);
+    } else {
+        $stmt = $pdo->prepare("SELECT p.*, u.fullname as manager_name FROM projects p LEFT JOIN users u ON p.created_by = u.id WHERE p.id = ? AND p.created_by = ?");
+        $stmt->execute([$project_id, $user_id]);
+    }
+    return $stmt->fetch();
+}
+
+function get_tasks_for_user($pdo, $user_id) {
+    if (($_SESSION['role'] ?? '') === 'admin') {
+        $stmt = $pdo->query("SELECT t.*, p.name as project_name, u.fullname as assigned_name FROM tasks t LEFT JOIN projects p ON t.project_id = p.id LEFT JOIN users u ON t.assigned_to = u.id ORDER BY t.created_at DESC");
+    } else {
+        $stmt = $pdo->prepare("SELECT t.*, p.name as project_name, u.fullname as assigned_name FROM tasks t LEFT JOIN projects p ON t.project_id = p.id LEFT JOIN users u ON t.assigned_to = u.id WHERE p.created_by = ? ORDER BY t.created_at DESC");
+        $stmt->execute([$user_id]);
+    }
+    return $stmt->fetchAll();
+}
+
+function get_expenses_for_user($pdo, $user_id) {
+    $sql = "SELECT e.*, p.name as project_name, u.fullname as recorded_by_name FROM expenses e JOIN projects p ON e.project_id = p.id LEFT JOIN users u ON e.recorded_by = u.id";
+    if (($_SESSION['role'] ?? '') !== 'admin') {
+        $sql .= " WHERE p.created_by = ?";
+    }
+    $sql .= " ORDER BY e.expense_date DESC, e.created_at DESC";
+    $stmt = $pdo->prepare($sql);
+    if (($_SESSION['role'] ?? '') !== 'admin') {
+        $stmt->execute([$user_id]);
+    } else {
+        $stmt->execute();
+    }
+    return $stmt->fetchAll();
+}
+
 /**
- * Get recent projects (for dashboard) - FIXED
+ * Get recent projects for dashboard
  */
 function get_recent_projects($pdo, $limit = 5) {
     $limit = intval($limit);
@@ -244,7 +282,7 @@ function get_recent_projects($pdo, $limit = 5) {
 }
 
 /**
- * Get recent tasks (for dashboard) - FIXED
+ * Get recent tasks for dashboard
  */
 function get_recent_tasks($pdo, $limit = 5) {
     $limit = intval($limit);
@@ -259,7 +297,7 @@ function get_recent_tasks($pdo, $limit = 5) {
 }
 
 /**
- * Get recent expenses (for dashboard) - FIXED
+ * Get recent expenses for dashboard
  */
 function get_recent_expenses($pdo, $limit = 5) {
     $limit = intval($limit);

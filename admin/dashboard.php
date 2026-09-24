@@ -1,6 +1,4 @@
 <?php
-// admin/dashboard.php - Admin Dashboard with Reports Card
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -52,7 +50,6 @@ include '../includes/header.php';
                 <span class="stat-number">KES <?php echo number_format(get_total_expenses($pdo), 0); ?></span>
             </div>
         </a>
-        <!-- REPORTS CARD - NEW -->
         <a href="../reports.php" class="stat-card stat-reports" style="text-decoration:none;">
             <div class="stat-icon">📊</div>
             <div class="stat-info">
@@ -97,7 +94,7 @@ include '../includes/header.php';
 </div>
 
 <style>
-/* Add Reports Card Color */
+/* The stat cards color */
 .stat-reports {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(243, 229, 245, 0.6));
     border-left: 4px solid #6a1b9a;

@@ -68,13 +68,13 @@ include '../includes/header.php';
             <textarea id="description" name="description" rows="3" placeholder="Optional description"></textarea>
 
             <label for="quantity">Quantity *</label>
-            <input type="number" id="quantity" name="quantity" step="1" value="0" required>
+            <input type="number" id="quantity" name="quantity" step="1" value="0" placeholder="e.g., 100" required>
 
             <label for="unit">Unit *</label>
             <input type="text" id="unit" name="unit" placeholder="e.g., bags, pieces, kg, litres" required>
 
             <label for="unit_price">Unit Price (KES) *</label>
-            <input type="number" id="unit_price" name="unit_price" step="0.01" value="0.00" required>
+            <input type="number" id="unit_price" name="unit_price" step="0.01" value="0.00" placeholder="e.g., 850.00" required>
 
             <label for="supplier">Supplier</label>
             <input type="text" id="supplier" name="supplier" placeholder="Supplier name (optional)">

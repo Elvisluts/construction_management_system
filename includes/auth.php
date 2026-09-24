@@ -38,7 +38,7 @@ function require_role($role) {
 }
 
 /**
- * Get current user information (RENAMED to avoid PHP built-in function conflict)
+ * Get current user information
  */
 function get_logged_in_user($pdo) {
     if (isset($_SESSION['user_id'])) {

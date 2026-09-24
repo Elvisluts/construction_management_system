@@ -13,8 +13,14 @@ $user_id = $user['id'] ?? 0;
 $task_id = $_GET['id'] ?? 0;
 
 // Verify task belongs to manager's project
-$stmt = $pdo->prepare("SELECT t.id FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.id = ? AND p.created_by = ?");
-$stmt->execute([$task_id, $user_id]);
+$sql = "SELECT t.id FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.id = ?";
+$params = [$task_id];
+if (($_SESSION['role'] ?? '') !== 'admin') {
+    $sql .= " AND p.created_by = ?";
+    $params[] = $user_id;
+}
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 if ($stmt->fetch()) {
     $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = ?");
     $stmt->execute([$task_id]);

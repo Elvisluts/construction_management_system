@@ -22,9 +22,7 @@ if (!is_numeric($project_id) || $project_id <= 0) {
 }
 
 // Fetch project
-$stmt = $pdo->prepare("SELECT p.*, u.fullname as manager_name FROM projects p LEFT JOIN users u ON p.created_by = u.id WHERE p.id = ? AND p.created_by = ?");
-$stmt->execute([$project_id, $user_id]);
-$project = $stmt->fetch();
+$project = get_accessible_project($pdo, $project_id, $user_id);
 
 if (!$project) {
     header('Location: projects.php');

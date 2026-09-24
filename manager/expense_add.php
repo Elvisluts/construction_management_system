@@ -29,6 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($project_id) || $project_id == 0) {
         $error = 'Please select a project.';
+    } elseif (!get_accessible_project($pdo, $project_id, $user_id)) {
+        $error = 'You do not have access to that project.';
     } elseif (empty($description)) {
         $error = 'Expense description is required.';
     } elseif (!is_numeric($amount) || $amount <= 0) {
@@ -88,7 +90,7 @@ include '../includes/header.php';
             <input type="text" id="description" name="description" placeholder="e.g., Cement purchase" required>
 
             <label for="amount">Amount (KES) *</label>
-            <input type="number" id="amount" name="amount" step="0.01" required>
+            <input type="number" id="amount" name="amount" step="0.01" placeholder="e.g., 25000" required>
 
             <label for="expense_date">Expense Date *</label>
             <input type="date" id="expense_date" name="expense_date" required>

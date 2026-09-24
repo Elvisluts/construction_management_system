@@ -16,23 +16,20 @@ $user_id = $user['id'] ?? 0;
 
 // Handle Delete
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $stmt = $pdo->prepare("DELETE t FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.id = ? AND p.created_by = ?");
-    $stmt->execute([$_GET['delete'], $user_id]);
+    $sql = "DELETE t FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.id = ?";
+    $params = [$_GET['delete']];
+    if (($_SESSION['role'] ?? '') !== 'admin') {
+        $sql .= " AND p.created_by = ?";
+        $params[] = $user_id;
+    }
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
     header('Location: tasks.php');
     exit();
 }
 
 // Get all tasks for this manager's projects
-$stmt = $pdo->prepare("
-    SELECT t.*, p.name as project_name, u.fullname as assigned_name 
-    FROM tasks t 
-    LEFT JOIN projects p ON t.project_id = p.id 
-    LEFT JOIN users u ON t.assigned_to = u.id 
-    WHERE p.created_by = ? 
-    ORDER BY t.created_at DESC
-");
-$stmt->execute([$user_id]);
-$tasks = $stmt->fetchAll();
+$tasks = get_tasks_for_user($pdo, $user_id);
 
 // Calculate stats
 $total_tasks = count($tasks);

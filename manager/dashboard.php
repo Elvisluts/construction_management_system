@@ -1,6 +1,4 @@
 <?php
-// manager/dashboard.php - Manager Dashboard with Materials Card (No Sidebar)
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -53,7 +51,6 @@ include '../includes/header.php';
                 <span class="stat-number"><?php echo get_total_workers($pdo); ?></span>
             </div>
         </a>
-        <!-- MATERIALS CARD - ADDED -->
         <a href="materials.php" class="stat-card stat-materials" style="text-decoration:none;">
             <div class="stat-icon">📦</div>
             <div class="stat-info">

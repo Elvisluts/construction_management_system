@@ -15,8 +15,14 @@ $user = get_logged_in_user($pdo);
 $user_id = $user['id'] ?? 0;
 
 $task_id = $_GET['id'] ?? 0;
-$stmt = $pdo->prepare("SELECT t.* FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.id = ? AND p.created_by = ?");
-$stmt->execute([$task_id, $user_id]);
+$sql = "SELECT t.* FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.id = ?";
+$params = [$task_id];
+if (($_SESSION['role'] ?? '') !== 'admin') {
+    $sql .= " AND p.created_by = ?";
+    $params[] = $user_id;
+}
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 $task = $stmt->fetch();
 
 if (!$task) {
@@ -40,13 +46,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($title) || empty($project_id) || empty($due_date)) {
         $error = 'Please fill in all required fields.';
+    } elseif (!get_accessible_project($pdo, $project_id, $user_id)) {
+        $error = 'You do not have access to that project.';
     } else {
         $stmt = $pdo->prepare("UPDATE tasks SET project_id = ?, title = ?, description = ?, assigned_to = ?, due_date = ?, status = ? WHERE id = ?");
         if ($stmt->execute([$project_id, $title, $description, $assigned_to, $due_date, $status, $task_id])) {
             $success = 'Task updated successfully!';
             // Refresh task data
-            $stmt = $pdo->prepare("SELECT t.* FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.id = ? AND p.created_by = ?");
-            $stmt->execute([$task_id, $user_id]);
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
             $task = $stmt->fetch();
         } else {
             $error = 'Failed to update task.';

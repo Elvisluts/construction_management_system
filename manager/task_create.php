@@ -42,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Task title is required.';
     } elseif (empty($project_id) || $project_id == 0) {
         $error = 'Please select a project.';
+    } elseif (!get_accessible_project($pdo, $project_id, $user_id)) {
+        $error = 'You do not have access to that project.';
     } elseif (empty($due_date)) {
         $error = 'Due date is required.';
     } else {

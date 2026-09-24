@@ -1,5 +1,4 @@
 <?php
-// register.php - Registration Page (Pure HTML + CSS)
 require_once 'config/database.php';
 
 $error = '';
@@ -52,17 +51,17 @@ include 'includes/header.php';
 
         <form method="POST" action="">
             <label for="fullname">Full Name</label>
-            <input type="text" id="fullname" name="fullname" required>
+            <input type="text" id="fullname" name="fullname" placeholder="e.g., Jane Doe" required>
 
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
 
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" placeholder="At least 6 characters" required>
             <small>Minimum 6 characters</small>
 
             <label for="confirm_password">Confirm Password</label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password" required>
 
             <label for="role">Role</label>
             <select id="role" name="role">

@@ -1,6 +1,4 @@
 <?php
-// worker/dashboard.php - Worker Dashboard (Styled)
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 

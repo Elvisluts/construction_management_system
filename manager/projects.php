@@ -16,8 +16,13 @@ $user_id = $user['id'] ?? 0;
 
 // Handle Delete
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $stmt = $pdo->prepare("DELETE FROM projects WHERE id = ? AND created_by = ?");
-    $stmt->execute([$_GET['delete'], $user_id]);
+    if (($_SESSION['role'] ?? '') === 'admin') {
+        $stmt = $pdo->prepare("DELETE FROM projects WHERE id = ?");
+        $stmt->execute([$_GET['delete']]);
+    } else {
+        $stmt = $pdo->prepare("DELETE FROM projects WHERE id = ? AND created_by = ?");
+        $stmt->execute([$_GET['delete'], $user_id]);
+    }
     header('Location: projects.php');
     exit();
 }

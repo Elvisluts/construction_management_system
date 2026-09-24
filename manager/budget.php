@@ -1,5 +1,5 @@
 <?php
-// manager/budget.php - Budget & Expense Management (Styled)
+// manager/budget.php - Budget & Expense Management 
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -16,8 +16,14 @@ $user_id = $user['id'] ?? 0;
 
 // Handle Expense Delete
 if (isset($_GET['delete_expense']) && is_numeric($_GET['delete_expense'])) {
-    $stmt = $pdo->prepare("DELETE e FROM expenses e JOIN projects p ON e.project_id = p.id WHERE e.id = ? AND p.created_by = ?");
-    $stmt->execute([$_GET['delete_expense'], $user_id]);
+    $sql = "DELETE e FROM expenses e JOIN projects p ON e.project_id = p.id WHERE e.id = ?";
+    $params = [$_GET['delete_expense']];
+    if (($_SESSION['role'] ?? '') !== 'admin') {
+        $sql .= " AND p.created_by = ?";
+        $params[] = $user_id;
+    }
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
     header('Location: budget.php');
     exit();
 }
@@ -32,16 +38,7 @@ foreach ($projects as $project) {
 }
 
 // Get all expenses
-$stmt = $pdo->prepare("
-    SELECT e.*, p.name as project_name, u.fullname as recorded_by_name
-    FROM expenses e
-    JOIN projects p ON e.project_id = p.id
-    LEFT JOIN users u ON e.recorded_by = u.id
-    WHERE p.created_by = ?
-    ORDER BY e.expense_date DESC, e.created_at DESC
-");
-$stmt->execute([$user_id]);
-$all_expenses = $stmt->fetchAll();
+$all_expenses = get_expenses_for_user($pdo, $user_id);
 
 // Calculate totals
 $total_budget = 0;

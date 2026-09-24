@@ -25,9 +25,7 @@ if (!is_numeric($project_id) || $project_id <= 0) {
 }
 
 // Fetch project
-$stmt = $pdo->prepare("SELECT * FROM projects WHERE id = ? AND created_by = ?");
-$stmt->execute([$project_id, $user_id]);
-$project = $stmt->fetch();
+$project = get_accessible_project($pdo, $project_id, $user_id);
 
 if (!$project) {
     header('Location: projects.php');
@@ -51,13 +49,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!is_numeric($budget) || $budget < 0) {
         $error = 'Budget must be a positive number.';
     } else {
-        $stmt = $pdo->prepare("UPDATE projects SET name = ?, description = ?, start_date = ?, end_date = ?, budget = ?, status = ? WHERE id = ? AND created_by = ?");
-        if ($stmt->execute([$name, $description, $start_date, $end_date, $budget, $status, $project_id, $user_id])) {
+        $sql = "UPDATE projects SET name = ?, description = ?, start_date = ?, end_date = ?, budget = ?, status = ? WHERE id = ?";
+        $params = [$name, $description, $start_date, $end_date, $budget, $status, $project_id];
+        if (($_SESSION['role'] ?? '') !== 'admin') {
+            $sql .= " AND created_by = ?";
+            $params[] = $user_id;
+        }
+        $stmt = $pdo->prepare($sql);
+        if ($stmt->execute($params)) {
             $success = 'Project updated successfully!';
             // Refresh project data
-            $stmt = $pdo->prepare("SELECT * FROM projects WHERE id = ? AND created_by = ?");
-            $stmt->execute([$project_id, $user_id]);
-            $project = $stmt->fetch();
+            $project = get_accessible_project($pdo, $project_id, $user_id);
         } else {
             $error = 'Failed to update project. Please try again.';
         }

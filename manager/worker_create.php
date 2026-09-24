@@ -75,29 +75,29 @@ include '../includes/header.php';
 
             <h4 style="margin-bottom:10px; color:#1a252f;">Account Details</h4>
             <label for="fullname">Full Name *</label>
-            <input type="text" id="fullname" name="fullname" required>
+            <input type="text" id="fullname" name="fullname" placeholder="e.g., Jane Doe" required>
 
             <label for="email">Email Address *</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" placeholder="worker@example.com" required>
 
             <label for="password">Password *</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" placeholder="At least 6 characters" required>
             <small>Minimum 6 characters</small>
 
             <label for="phone">Phone Number</label>
-            <input type="text" id="phone" name="phone">
+            <input type="text" id="phone" name="phone" placeholder="e.g., +254 700 000 000">
 
             <hr>
 
             <h4 style="margin-bottom:10px; color:#1a252f;">Worker Details</h4>
             <label for="national_id">National ID</label>
-            <input type="text" id="national_id" name="national_id">
+            <input type="text" id="national_id" name="national_id" placeholder="Enter national ID number">
 
             <label for="job_title">Job Title</label>
-            <input type="text" id="job_title" name="job_title">
+            <input type="text" id="job_title" name="job_title" placeholder="e.g., Site Engineer">
 
             <label for="department">Department</label>
-            <input type="text" id="department" name="department">
+            <input type="text" id="department" name="department" placeholder="e.g., Construction">
 
             <label for="hire_date">Hire Date</label>
             <input type="date" id="hire_date" name="hire_date">
